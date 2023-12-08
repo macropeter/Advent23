@@ -12,9 +12,8 @@
 
 (defun suche (x dat)
   "Suche einen Knoten, gib die zwei Wege zurück"
-  (if (equal (caar dat)
-	     x) ;tail-rekursiv!
-      (cdar dat) ;gib den CDR dieses Knotens zurück
+  (if (equal (caar dat) x)
+      (cdar dat) ;gib den CDR dieses Knotens zurück ;tail-rekursiv!
     (suche x (cdr dat)))) ;suche weiter
 
 (defun BestimmeNextNode (knoten nr)
