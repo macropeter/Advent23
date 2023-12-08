@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+    const ziffern=new Set(['0','1','2','3','4','5','6','7','8','9']);
+
+    function findZiffer(str)
+    {
+        for (let i=0;i<str.length;i++)
+        {
+            if (ziffern.has(str.charAt(i))) return str.charAt(i);
+        }
+        return false;
+    }
+
+    function findZifferBack(str)
+    {
+        for (let i=str.length-1;i>=0;i--)
+        {
+            if (ziffern.has(str.charAt(i))) return str.charAt(i);
+        }
+        return false;
+    }
+
+    function findNumber(str)
+    {
+        return parseInt(findZiffer(str)+findZifferBack(str));
+    }
+
+    function summe(TextArray)
+    {
+        
+        let erg=0;
+
+        TextArray.forEach(element => {
+            erg+=findNumber(element);});
+        
+        return erg;
+    }
+
+    function wrapper()
+    {
+        const eingabe=document.getElementById("Eingabe").value.split("\n");
+        alert("Summe ist "+summe(eingabe));
+    }
+</script>
+
+    <title>Aoc 1</title>
+</head>
+<body>
+    <h1>AOC 1: Trebuchet</h1>
+
+    <textarea id="Eingabe"rows="4" cols="50">
+	1abc2
+	pqr3stu8vwx
+	a1b2c3d4e5f
+	treb7uchet
+    </textarea>
+
+    <input type="button"
+        value="Los!"
+        onclick="wrapper()">
+
+
+
+</body>
+</html>
