@@ -7,13 +7,13 @@
 	      (string "LLR"))
 
 (defun charMod (str nr)
-  "Zugriff auf den unendlich fortgesetzen String"
+  "Zugriff auf den periodisch fortgesetzen String"
   (char str (mod nr (length str))))
 
 (defun suche (x dat)
   "Suche einen Knoten, gib die zwei Wege zurück"
   (if (equal (caar dat)
-	     x)
+	     x) ;tail-rekursiv!
       (cdar dat) ;gib den CDR dieses Knotens zurück
     (suche x (cdr dat)))) ;suche weiter
 
@@ -25,10 +25,11 @@
       (cadr hilf)))) ; weiter zum rechten Knoten
 
 (defun SuchePfad (anfang nr)
+  "Springe von Knoten zu Knoten, bis :ZZZ erreicht"
   (let ((hilf (BestimmeNextNode anfang nr)))
     (if (eq hilf :ZZZ) ;wenn :ZZZ, Ende erreicht
-	nr
+	nr  ;tail-rekursiv!
       (SuchePfad hilf (1+ nr))))) ;suche weiter, mit dem neuen String
 
-(defun Start ()
+(defun Main ()
   (SuchePfad :AAA 1))
