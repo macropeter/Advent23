@@ -4,7 +4,7 @@
 (defparameter shortl '(10 13 16 21 30 45))
 (defparameter longl '((0 3 6 9 12 15)
 		      (1 3 6 10 15 21)
-		      (10 13 16 21 30 45))))
+		      (10 13 16 21 30 45)))
 
 (defun difflist (liste)
   "Differenzliste: Länge n-1; große Werte am Anfang"
@@ -18,11 +18,10 @@
 
 (defun diffdown (liste)
   "Liste aller Differenzlisten erstellen"
-  (let ((hilf (difflist liste)));nicht notwendig
-    (if (alleZero liste)
-        (list liste)
-      (append (diffdown hilf)
-	      (list liste)))))
+  (if (alleZero liste)
+      (list liste)
+    (append (list liste)
+	    (diffdown (difflist liste)))))
 
 (defun diffSumme (listlist)
   "Neuen ersten Wert berechnen, Summer aller CAR"
