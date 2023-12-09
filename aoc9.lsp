@@ -7,8 +7,8 @@
 		      (10 13 16 21 30 45)))
 
 (defun difflist (liste)
-  "Differenzliste: Länge n-1; große Werte am Anfang"
-  (unless (= 1 (length liste))
+  "Differenzliste: Länge n-1; List muss absteigend geordnet sein"
+  (if (> (length liste) 1)
     (cons (- (car liste)
 	     (cadr liste))
 	  (difflist (cdr liste)))))
@@ -24,7 +24,7 @@
 	    (diffdown (difflist liste)))))
 
 (defun diffSumme (listlist)
-  "Neuen ersten Wert berechnen, Summer aller CAR"
+  "Neuen ersten Wert berechnen, Summe aller CAR"
   (loop for item in listlist
 	sum (car item)))
 
