@@ -63,13 +63,14 @@ nil nil nil nil nil nil nil 1   nil nil
     (setf (aref *plat* zeile spalte) nil)))
     
 (defun all-the-way-down (zeile spalte)
+  "ein Einser wandert bis zum Hindernis/Ende hinunter"
   (when (and (< zeile (1- *zeilen*)) ;Ende, falls schon ganz unten (Kurzschlussauswertung!)
 	     (null (aref *plat* (1+ zeile) spalte))) ;prüfen ob unterhalb frei ist
     (steige-ab zeile spalte) ;tauschen
     (all-the-way-down (1+ zeile) spalte))) ;weiter absteigen
 
 (defun check-spalte (spalte)
-  "Geht eine Spalte von unten nach oben durch"
+  "eine Spalte ordnen: alle 1 steigen bis zum nächsten Hindernis hinunter"
   (loop for i
 	from (- *zeilen* 2) ;die letzte Zeile braucht nicht geprüft werden
 	downto 0
