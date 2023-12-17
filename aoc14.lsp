@@ -1,6 +1,11 @@
-(defparameter *spalten* 10)
-(defparameter *zeilen* 10)
-(defvar *plat* (make-array '(10 10))); dient als globale Variable
+;;;Advent of Code 2023: Day 14
+;; Anleitung:
+;; bereite die Daten mit aoc14.awk auf und kopiere sie in den Parameter aplat
+;; führe die Transformation (shift-north) aus und berechne die Summe mit MainSumme
+
+(defparameter *spalten* 10 "Größe des Spielfelds: Anzahl Spalten")
+(defparameter *zeilen* 10 "Größe des Spielfelds: Anzahl Zeilen")
+(defvar *plat* (make-array '(*zeilen* *spalten*))); dient als globale Variable
 (defparameter aplat '(
 (
 1   nil nil nil nil 0   nil nil nil nil 
@@ -103,3 +108,4 @@ nil nil nil nil nil nil nil 1   nil nil
 	to (1- *zeilen*)
 	sum (* (1+ j)
 	       (SummeZeile j))))
+
