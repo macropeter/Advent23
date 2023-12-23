@@ -1,11 +1,8 @@
 ;;; Advent of Code 2023: Day 11
 
-(defvar *datarray*)
-(defparameter *zeilen* 10 "Ursprungsarray: Zeilenzahl")
-(defparameter *spalten* 10 "Ursprungsarray: Spaltenzahl")
-
-(defparameter *locherx* nil)
-(defparameter *lochery* nil)
+(defvar *datarray* "Doppelarray mit den Positionen der Galaxien (als 1, sonst nil)")
+(defparameter *zeilen* 10 "Ursprungsarray: Zeilenzahl");müssen am Anfang korrekt gesetzt werden!
+(defparameter *spalten* 10 "Ursprungsarray: Spaltenzahl");das awk-Skript gibt die Koordinaten am Ende an
 
 (defparameter testdaten '(
 (
@@ -43,6 +40,8 @@ nil nil nil nil nil nil nil 1   nil nil
 
 ;; Daten aufbereiten:
 
+;; Daten in ein Array laden:
+
 (setq *datarray* (make-array (list *zeilen* *spalten*) :initial-contents testdaten))
 
 
@@ -62,6 +61,7 @@ nil nil nil nil nil nil nil 1   nil nil
 
 
 (defun findLocherX (datenpaare)
+  "Finde die leeren Zeilen, ergibt eine Liste der leeren Zeilen"
   (set-difference (loop for i
 			below *zeilen*
 			collect i)
@@ -71,6 +71,7 @@ nil nil nil nil nil nil nil 1   nil nil
 
 
 (defun findLocherY (datenpaare)
+  "Finde die leeren Spalten: ergibt eine Liste der leeren Spalten"
   (set-difference (loop for i
 			below *spalten*
 			collect i)
@@ -79,6 +80,7 @@ nil nil nil nil nil nil nil 1   nil nil
 			collect (cadr x))))
 
 (defun helpcarx (datenpaare grz)
+  "EINE leere Zeile einfügen"
   (mapcar #'(lambda (x) (list (if (> (car x) grz)
 				  (1+ (car x))
 				(car x))
@@ -86,13 +88,14 @@ nil nil nil nil nil nil nil 1   nil nil
 	  datenpaare))
 
 (defun ExpandUniverseX (datenpaare loecher);setzt voraus, dass die loecher absteigend geordnet sind!
+  "von oben angefangen schrittweise die x-Koordinaten immmer um 1 erhöhen"
   (if (null loecher) datenpaare
     (ExpandUniverseX (helpcarx datenpaare (car loecher))
 		     (cdr loecher))))
 
 
 (defun helpcarY (datenpaare grz)
-  ""
+  "EINE leere Spalte einfügen"
   (mapcar #'(lambda (x) (list (car x)
 			      (if (> (cadr x) grz)
 				  (1+ (cadr x))
@@ -100,22 +103,18 @@ nil nil nil nil nil nil nil 1   nil nil
 	  datenpaare))
 
 (defun ExpandUniverseY (datenpaare loecher);setzt voraus, dass die loecher absteigend geordnet sind!
+  "von oben angefangen schrittweise die y-Koordinaten immmer um 1 erhöhen"
   (if (null loecher) datenpaare
     (ExpandUniverseY (helpcary datenpaare (car loecher))
 		     (cdr loecher))))
 
 (defun PrepareData (datenarray)
   "Die Daten vollständig aufbereiten, incl. Expansion des Universums"
-  (let ((daten nil))
-    (setq daten (DataExtract datenarray))
-    (setq *locherx* (findLocherX daten))
-    (setq *lochery* (findLocherY daten))
-    (setq *zeilen* (+ *zeilen* (length *locherx*)))
-    (setq *spalten* (+ *spalten* (length *lochery*)))
-    (ExpandUniverseX (ExpandUniverseY daten *lochery*) *locherx*)))
+  (let ((daten (DataExtract datenarray)))
+    (ExpandUniverseX (ExpandUniverseY daten (Findlochery daten)) (Findlocherx daten))))
 
 
-;;; eigentliches Programm:
+;;; eigentliches Programm: Abstandsberechnungen
 
 (defun dist (g1 g2)
   "Abstand zweier Punkte (nicht-euklidisch)"
