@@ -1,27 +1,13 @@
 ;;; Advent of Code 2023: Day 11
 
 (defvar *datarray*)
-(defparameter *zeilen* 140 "Ursprungsarray: Zeilenzahl")
-(defparameter *spalten* 140 "Ursprungsarray: Spaltenzahl")
-
-(defparameter *sparseDat* "Datenpaare")
+(defparameter *zeilen* 10 "Ursprungsarray: Zeilenzahl")
+(defparameter *spalten* 10 "Ursprungsarray: Spaltenzahl")
 
 (defparameter *locherx* nil)
 (defparameter *lochery* nil)
 
-(defparameter data '(;Testdaten
-	      (0 4) 
-	      (1 9)
-	      (2 0)
-	      (5 8)
-	      (6 1)
-	      (7 12)
-	      (10 9)
-	      (11 0)
-	      (11 5)))
-
 (defparameter testdaten '(
-(
 (
 nil nil nil 1   nil nil nil nil nil nil 
 )
@@ -52,11 +38,12 @@ nil nil nil nil nil nil nil 1   nil nil
 (
 1   nil nil nil 1   nil nil nil nil nil 
 )
-)))
+)
+	      "enthält die zu verarbeitenden Daten (mit awk transformiert)")
 
 ;; Daten aufbereiten:
 
-(setq *datarray* (make-array '(140 140) :initial-contents testdaten))
+(setq *datarray* (make-array (list *zeilen* *spalten*) :initial-contents testdaten))
 
 
 (defun sparseDat () ;funktioniert nicht
@@ -98,20 +85,21 @@ nil nil nil nil nil nil nil 1   nil nil
 			      (cadr x)))
 	  datenpaare))
 
-(defun ExpandUniverseX (datenpaare loecher)
+(defun ExpandUniverseX (datenpaare loecher);setzt voraus, dass die loecher absteigend geordnet sind!
   (if (null loecher) datenpaare
     (ExpandUniverseX (helpcarx datenpaare (car loecher))
 		     (cdr loecher))))
 
 
 (defun helpcarY (datenpaare grz)
+  ""
   (mapcar #'(lambda (x) (list (car x)
 			      (if (> (cadr x) grz)
 				  (1+ (cadr x))
 				(cadr x))))
 	  datenpaare))
 
-(defun ExpandUniverseY (datenpaare loecher)
+(defun ExpandUniverseY (datenpaare loecher);setzt voraus, dass die loecher absteigend geordnet sind!
   (if (null loecher) datenpaare
     (ExpandUniverseY (helpcary datenpaare (car loecher))
 		     (cdr loecher))))
