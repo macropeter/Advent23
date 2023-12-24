@@ -4,7 +4,7 @@
 (defparameter *zeilen* 10 "Ursprungsarray: Zeilenzahl");müssen am Anfang korrekt gesetzt werden!
 (defparameter *spalten* 10 "Ursprungsarray: Spaltenzahl");das awk-Skript gibt die Koordinaten am Ende an
 
-(defparameter testdaten '(
+(defparameter testdaten '( ; die mit awk-Skript transformierten Daten
 (
 nil nil nil 1   nil nil nil nil nil nil 
 )
@@ -36,7 +36,7 @@ nil nil nil nil nil nil nil 1   nil nil
 1   nil nil nil 1   nil nil nil nil nil 
 )
 )
-	      "enthält die zu verarbeitenden Daten (mit awk transformiert)")
+)
 
 ;; Daten aufbereiten:
 
@@ -59,8 +59,9 @@ nil nil nil nil nil nil nil 1   nil nil
 	  (setq erg (cons (list i j)
 			  erg)))))))
 
+;;; alle weiteren Operationen werden nicht mit dem Doppelarray sondern mit der Liste der Datenpaare ausgeführt
 
-(defun findLocherX (datenpaare)
+(defun findLeereZeilen (datenpaare)
   "Finde die leeren Zeilen, ergibt eine Liste der leeren Zeilen"
   (set-difference (loop for i
 			below *zeilen*
@@ -70,7 +71,7 @@ nil nil nil nil nil nil nil 1   nil nil
 			collect (car x))))
 
 
-(defun findLocherY (datenpaare)
+(defun findLeereSpalten (datenpaare)
   "Finde die leeren Spalten: ergibt eine Liste der leeren Spalten"
   (set-difference (loop for i
 			below *spalten*
@@ -79,39 +80,39 @@ nil nil nil nil nil nil nil 1   nil nil
 			in  datenpaare
 			collect (cadr x))))
 
-(defun helpcarx (datenpaare grz)
-  "EINE leere Zeile einfügen"
-  (mapcar #'(lambda (x) (list (if (> (car x) grz)
+(defun helpcarx (datenpaare grenze)
+  "EINE leere Zeile einfügen: alle Datenpaare über grenze um +1 verschieben"
+  (mapcar #'(lambda (x) (list (if (> (car x) grenze)
 				  (1+ (car x))
 				(car x))
 			      (cadr x)))
 	  datenpaare))
 
-(defun ExpandUniverseX (datenpaare loecher);setzt voraus, dass die loecher absteigend geordnet sind!
+(defun ExpandUniverseX (datenpaare leereZeilen);setzt voraus, dass die leeren Zeilen absteigend geordnet sind!
   "von oben angefangen schrittweise die x-Koordinaten immmer um 1 erhöhen"
-  (if (null loecher) datenpaare
-    (ExpandUniverseX (helpcarx datenpaare (car loecher))
-		     (cdr loecher))))
+  (if (null leereZeilen) datenpaare
+    (ExpandUniverseX (helpcarx datenpaare (car leereZeilen))
+		     (cdr leereZeilen))))
 
 
-(defun helpcarY (datenpaare grz)
+(defun helpcarY (datenpaare grenze)
   "EINE leere Spalte einfügen"
   (mapcar #'(lambda (x) (list (car x)
-			      (if (> (cadr x) grz)
+			      (if (> (cadr x) grenze)
 				  (1+ (cadr x))
 				(cadr x))))
 	  datenpaare))
 
-(defun ExpandUniverseY (datenpaare loecher);setzt voraus, dass die loecher absteigend geordnet sind!
+(defun ExpandUniverseY (datenpaare leereSpalten);setzt voraus, dass die leeren Spalten absteigend geordnet sind!
   "von oben angefangen schrittweise die y-Koordinaten immmer um 1 erhöhen"
-  (if (null loecher) datenpaare
-    (ExpandUniverseY (helpcary datenpaare (car loecher))
-		     (cdr loecher))))
+  (if (null leereSpalten) datenpaare
+    (ExpandUniverseY (helpcary datenpaare (car leereSpalten))
+		     (cdr leereSpalten))))
 
-(defun PrepareData (datenarray)
+(defun PrepareData (datenpaare)
   "Die Daten vollständig aufbereiten, incl. Expansion des Universums"
-  (let ((daten (DataExtract datenarray)))
-    (ExpandUniverseX (ExpandUniverseY daten (Findlochery daten)) (Findlocherx daten))))
+  (let ((daten (DataExtract datenpaare)))
+    (ExpandUniverseX (ExpandUniverseY daten (findLeereSpalten daten)) (findLeereZeilen daten))))
 
 
 ;;; eigentliches Programm: Abstandsberechnungen
